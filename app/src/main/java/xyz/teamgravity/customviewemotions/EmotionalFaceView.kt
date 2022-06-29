@@ -7,15 +7,37 @@ import android.view.View
 
 class EmotionalFaceView(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
-    private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    companion object {
+        private const val DEFAULT_FACE_COLOR = Color.YELLOW
+        private const val DEFAULT_EYES_COLOR = Color.BLACK
+        private const val DEFAULT_MOUTH_COLOR = Color.BLACK
+        private const val DEFAULT_BORDER_COLOR = Color.BLACK
+        private const val DEFAULT_BORDER_WIDTH = 4F
+
+        const val HAPPY = 0
+        const val SAD = 1
+    }
+
+    private val paint = Paint()
     private val mouthPath = Path()
 
-    private var faceColor = Color.YELLOW
-    private var eyesColor = Color.BLACK
-    private var mouthColor = Color.BLACK
-    private var borderColor = Color.BLACK
-    private var borderWidth = 4.0F
-    private var size = 320
+    private var faceColor = DEFAULT_FACE_COLOR
+    private var eyesColor = DEFAULT_EYES_COLOR
+    private var mouthColor = DEFAULT_MOUTH_COLOR
+    private var borderColor = DEFAULT_BORDER_COLOR
+    private var borderWidth = DEFAULT_BORDER_WIDTH
+    private var size = 0
+
+    var happinessState = HAPPY
+        set(value) {
+            field = value
+            invalidate()
+        }
+
+    init {
+        paint.isAntiAlias = true
+        setupAttributes(attrs)
+    }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
@@ -29,6 +51,17 @@ class EmotionalFaceView(context: Context, attrs: AttributeSet) : View(context, a
         drawFaceBackground(canvas)
         drawEyes(canvas)
         drawMouth(canvas)
+    }
+
+    private fun setupAttributes(attrs: AttributeSet?) {
+        context.theme.obtainStyledAttributes(attrs, R.styleable.EmotionalFaceView, 0, 0).use { array ->
+            happinessState = array.getInt(R.styleable.EmotionalFaceView_state, HAPPY)
+            faceColor = array.getColor(R.styleable.EmotionalFaceView_faceColor, DEFAULT_FACE_COLOR)
+            eyesColor = array.getColor(R.styleable.EmotionalFaceView_eyesColor, DEFAULT_EYES_COLOR)
+            mouthColor = array.getColor(R.styleable.EmotionalFaceView_mouthColor, DEFAULT_MOUTH_COLOR)
+            borderColor = array.getColor(R.styleable.EmotionalFaceView_borderColor, DEFAULT_BORDER_COLOR)
+            borderWidth = array.getDimension(R.styleable.EmotionalFaceView_borderWidth, DEFAULT_BORDER_WIDTH)
+        }
     }
 
     private fun drawFaceBackground(canvas: Canvas) {
