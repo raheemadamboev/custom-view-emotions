@@ -22,7 +22,7 @@
         app:state="happy" />
 
     <xyz.teamgravity.customviewemotions.EmotionalFaceView
-        android:id="@+id/sad_face"
+        android:id="@+id/sad_b"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_marginTop="20dp"

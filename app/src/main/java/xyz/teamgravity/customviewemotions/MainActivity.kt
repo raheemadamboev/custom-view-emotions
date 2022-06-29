@@ -12,5 +12,28 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        button()
+    }
+
+    private fun button() {
+        onHappy()
+        onSad()
+    }
+
+    private fun onHappy() {
+        with(binding) {
+            happyB.setOnClickListener {
+                faceV.happinessState = EmotionalFaceView.HAPPY
+            }
+        }
+    }
+
+    private fun onSad() {
+        with(binding) {
+            sadB.setOnClickListener {
+                faceV.happinessState = EmotionalFaceView.SAD
+            }
+        }
     }
 }
