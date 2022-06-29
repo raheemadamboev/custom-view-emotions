@@ -2,8 +2,11 @@ package xyz.teamgravity.customviewemotions
 
 import android.content.Context
 import android.graphics.*
+import android.os.Bundle
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.View
+import androidx.core.os.bundleOf
 
 class EmotionalFaceView(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
@@ -13,6 +16,9 @@ class EmotionalFaceView(context: Context, attrs: AttributeSet) : View(context, a
         private const val DEFAULT_MOUTH_COLOR = Color.BLACK
         private const val DEFAULT_BORDER_COLOR = Color.BLACK
         private const val DEFAULT_BORDER_WIDTH = 4F
+
+        private const val SUPER_STATE = "superState"
+        private const val HAPPINESS_STATE = "happinessState"
 
         const val HAPPY = 0
         const val SAD = 1
@@ -51,6 +57,24 @@ class EmotionalFaceView(context: Context, attrs: AttributeSet) : View(context, a
         drawFaceBackground(canvas)
         drawEyes(canvas)
         drawMouth(canvas)
+    }
+
+    override fun onSaveInstanceState(): Parcelable {
+        return bundleOf(
+            SUPER_STATE to super.onSaveInstanceState(),
+            HAPPINESS_STATE to happinessState
+        )
+    }
+
+    override fun onRestoreInstanceState(state: Parcelable?) {
+        var superState = state
+
+        if (superState is Bundle) {
+            happinessState = superState.getInt(HAPPINESS_STATE, HAPPY)
+            superState = superState.getParcelable(SUPER_STATE)
+        }
+
+        super.onRestoreInstanceState(superState)
     }
 
     private fun setupAttributes(attrs: AttributeSet?) {
